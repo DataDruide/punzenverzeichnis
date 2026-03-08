@@ -230,7 +230,7 @@ const MeinePunzen = () => {
                           <p className="text-xs text-muted-foreground italic flex items-center gap-1">
                             <Lock className="h-3 w-3" />Dieser Datensatz ist gesperrt.
                           </p>
-                          {!(p as any).bearbeitung_beantragt ? (
+                          {!p.bearbeitung_beantragt ? (
                             <Button variant="outline" size="sm" onClick={() => handleRequestEdit(p.id)}>
                               <MessageSquare className="h-3.5 w-3.5 mr-1" />Bearbeitung beantragen
                             </Button>

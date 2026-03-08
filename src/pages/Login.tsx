@@ -48,12 +48,23 @@ const Login = () => {
       setLoading(false);
       return;
     }
-    // Update the auto-created profile with company data
+    // Wait briefly for the trigger to create the profile, then update with company data
     if (data.user) {
-      await supabase
+      // Small delay to let the database trigger create the profile
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      const { error: updateError } = await supabase
         .from('profiles')
         .update({ firmenname, ansprechpartner, telefon, email_kontakt: email })
         .eq('user_id', data.user.id);
+      if (updateError) {
+        console.warn('Profile update after registration failed, retrying...', updateError.message);
+        // Retry once after another delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        await supabase
+          .from('profiles')
+          .update({ firmenname, ansprechpartner, telefon, email_kontakt: email })
+          .eq('user_id', data.user.id);
+      }
     }
     setLoading(false);
     toast({
