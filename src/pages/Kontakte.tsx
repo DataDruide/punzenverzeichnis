@@ -116,9 +116,11 @@ const Kontakte = () => {
             <Download className="h-4 w-4 mr-1" /> CSV Export
           </Button>
           <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) { setForm(emptyForm); setEditingId(null); } }}>
+          {isAdmin && (
             <DialogTrigger asChild>
               <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Neuer Kontakt</Button>
             </DialogTrigger>
+          )}
             <DialogContent className="max-w-lg">
               <DialogHeader><DialogTitle>{editingId ? 'Kontakt bearbeiten' : 'Neuer Kontakt'}</DialogTitle></DialogHeader>
               <div className="grid grid-cols-2 gap-3 mt-4">
