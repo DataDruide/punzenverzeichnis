@@ -50,10 +50,7 @@ const AdminUsers = () => {
   };
 
   const handleDeleteUser = async (userId: string) => {
-    const { data: { session } } = await supabase.auth.getSession();
     const res = await supabase.functions.invoke('list-users', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${session?.access_token}` },
       body: { action: 'delete_user', userId },
     });
     if (res.error) {
