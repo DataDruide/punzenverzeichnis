@@ -15,7 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
-import { Stamp, Search, Eye, CheckCircle, Clock, Send, XCircle, Undo2 } from 'lucide-react';
+import { Stamp, Search, Eye, CheckCircle, Clock, Send, XCircle, Undo2, MessageSquare, Unlock } from 'lucide-react';
 
 const AdminPunzen = () => {
   const { isAdminOrAbove } = useAuth();
@@ -58,6 +58,16 @@ const AdminPunzen = () => {
     try {
       await updateMutation.mutateAsync({ id, data: { veroeffentlicht: false } });
       toast({ title: 'Depubliziert', description: 'Punze wurde aus der Publikation zurückgezogen.' });
+    } catch (err) {
+      toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
+    }
+  };
+
+  // Unlock a punze for editing (approve edit request)
+  const handleUnlock = async (id: string) => {
+    try {
+      await updateMutation.mutateAsync({ id, data: { veroeffentlicht: false, gesperrt: false, bearbeitung_beantragt: false } as any });
+      toast({ title: 'Entsperrt', description: 'Punze wurde zur Bearbeitung freigegeben.' });
     } catch (err) {
       toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
     }
@@ -161,6 +171,11 @@ const AdminPunzen = () => {
                           {p.veroeffentlicht && (
                             <Button size="sm" variant="outline" onClick={() => handleDepublish(p.id)}>
                               <Undo2 className="h-3.5 w-3.5 mr-1" />Depublizieren
+                            </Button>
+                          )}
+                          {(p as any).bearbeitung_beantragt && (
+                            <Button size="sm" variant="default" className="bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => handleUnlock(p.id)}>
+                              <Unlock className="h-3.5 w-3.5 mr-1" />Bearbeitung freigeben
                             </Button>
                           )}
                         </div>

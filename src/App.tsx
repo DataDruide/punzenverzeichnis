@@ -17,6 +17,8 @@ import Export from "./pages/Export";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
 import AdminUsers from "./pages/AdminUsers";
+import AdminEinstellungen from "./pages/AdminEinstellungen";
+import Hilfe from "./pages/Hilfe";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,8 +38,10 @@ const App = () => (
               <Route path="/profil" element={<Profil />} />
               <Route path="/punzen" element={<MeinePunzen />} />
               <Route path="/recherche" element={<Recherche />} />
+              <Route path="/hilfe" element={<Hilfe />} />
               <Route path="/admin/punzen" element={<AdminPunzen />} />
               <Route path="/admin/users" element={<AdminUsers />} />
+              <Route path="/admin/einstellungen" element={<AdminEinstellungen />} />
               <Route path="/kontakte" element={<Kontakte />} />
               <Route path="/bilder" element={<Bilder />} />
               <Route path="/export" element={<Export />} />

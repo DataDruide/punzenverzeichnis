@@ -13,6 +13,9 @@ const Login = () => {
   const [mode, setMode] = useState<'login' | 'register' | 'reset'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firmenname, setFirmenname] = useState('');
+  const [ansprechpartner, setAnsprechpartner] = useState('');
+  const [telefon, setTelefon] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -30,20 +33,34 @@ const Login = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) return;
+    if (!email || !password || !firmenname) {
+      toast({ title: 'Fehler', description: 'Bitte füllen Sie alle Pflichtfelder aus.', variant: 'destructive' });
+      return;
+    }
     if (password.length < 6) {
       toast({ title: 'Fehler', description: 'Passwort muss mindestens 6 Zeichen lang sein.', variant: 'destructive' });
       return;
     }
     setLoading(true);
-    const { error } = await supabase.auth.signUp({ email, password });
-    setLoading(false);
+    const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) {
       toast({ title: 'Registrierung fehlgeschlagen', description: error.message, variant: 'destructive' });
-    } else {
-      toast({ title: 'Erfolgreich registriert', description: 'Sie können sich jetzt anmelden.' });
-      navigate('/');
+      setLoading(false);
+      return;
     }
+    // Update the auto-created profile with company data
+    if (data.user) {
+      await supabase
+        .from('profiles')
+        .update({ firmenname, ansprechpartner, telefon, email_kontakt: email })
+        .eq('user_id', data.user.id);
+    }
+    setLoading(false);
+    toast({
+      title: 'Erfolgreich registriert',
+      description: 'Ihr Account wird nun von einem Administrator geprüft. Sie werden nach der Freischaltung benachrichtigt.',
+    });
+    setMode('login');
   };
 
   const handleReset = async (e: React.FormEvent) => {
@@ -78,15 +95,40 @@ const Login = () => {
         <CardContent>
           <form onSubmit={mode === 'login' ? handleLogin : mode === 'register' ? handleRegister : handleReset} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">E-Mail</Label>
+              <Label htmlFor="email">E-Mail *</Label>
               <Input id="email" type="email" placeholder="name@beispiel.de" value={email} onChange={e => setEmail(e.target.value)} required />
             </div>
             {mode !== 'reset' && (
               <div className="space-y-2">
-                <Label htmlFor="password">Passwort</Label>
+                <Label htmlFor="password">Passwort *</Label>
                 <Input id="password" type="password" placeholder="••••••••" value={password} onChange={e => setPassword(e.target.value)} required minLength={6} />
               </div>
             )}
+
+            {/* Extended registration fields (I) */}
+            {mode === 'register' && (
+              <>
+                <div className="border-t pt-4 space-y-3">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase">Firmendaten</p>
+                  <div className="space-y-2">
+                    <Label htmlFor="firmenname">Firmenname *</Label>
+                    <Input id="firmenname" placeholder="Goldschmiede Müller GmbH" value={firmenname} onChange={e => setFirmenname(e.target.value)} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="ansprechpartner">Ansprechpartner</Label>
+                    <Input id="ansprechpartner" placeholder="Max Müller" value={ansprechpartner} onChange={e => setAnsprechpartner(e.target.value)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="telefon">Telefon</Label>
+                    <Input id="telefon" type="tel" placeholder="+49 123 456789" value={telefon} onChange={e => setTelefon(e.target.value)} />
+                  </div>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Nach der Registrierung wird Ihr Account von einem Administrator geprüft und freigeschaltet.
+                </p>
+              </>
+            )}
+
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? (
                 <span className="flex items-center gap-2">
