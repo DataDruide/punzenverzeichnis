@@ -32,6 +32,7 @@ const App = () => (
               <Route path="/kontakte" element={<Kontakte />} />
               <Route path="/bilder" element={<Bilder />} />
               <Route path="/export" element={<Export />} />
+              <Route path="/admin" element={<AdminUsers />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
