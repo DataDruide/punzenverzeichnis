@@ -10,6 +10,10 @@ const navItems = [
   { to: '/export', label: 'Datenexport', icon: Download },
 ];
 
+const adminItems = [
+  { to: '/admin', label: 'Benutzerverwaltung', icon: Shield },
+];
+
 const AppSidebar = () => {
   const location = useLocation();
   const { user, isAdmin, signOut } = useAuth();
@@ -40,6 +44,28 @@ const AppSidebar = () => {
             </NavLink>
           );
         })}
+        {isAdmin && (
+          <>
+            <div className="my-2 border-t border-sidebar-border" />
+            {adminItems.map(({ to, label, icon: Icon }) => {
+              const isActive = location.pathname === to;
+              return (
+                <NavLink
+                  key={to}
+                  to={to}
+                  className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                    isActive
+                      ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                      : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
+                  }`}
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </NavLink>
+              );
+            })}
+          </>
+        )}
       </nav>
       <div className="p-4 border-t border-sidebar-border space-y-3">
         <div className="px-3">

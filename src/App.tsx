@@ -12,6 +12,7 @@ import Bilder from "./pages/Bilder";
 import Export from "./pages/Export";
 import Login from "./pages/Login";
 import ResetPassword from "./pages/ResetPassword";
+import AdminUsers from "./pages/AdminUsers";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
               <Route path="/kontakte" element={<Kontakte />} />
               <Route path="/bilder" element={<Bilder />} />
               <Route path="/export" element={<Export />} />
+              <Route path="/admin" element={<AdminUsers />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
