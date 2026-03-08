@@ -47,21 +47,26 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    if (req.method === "POST") {
-      const body = await req.json();
-      const { action, userId: targetUserId, role } = body;
+    // Check if request has a body (action request)
+    const contentType = req.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+      const text = await req.text();
+      if (text) {
+        const body = JSON.parse(text);
+        const { action, userId: targetUserId, role } = body;
 
-      if (action === "update_role") {
-        await supabaseAdmin.from("user_roles").delete().eq("user_id", targetUserId);
-        const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: targetUserId, role });
-        if (error) throw error;
-        return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
+        if (action === "update_role") {
+          await supabaseAdmin.from("user_roles").delete().eq("user_id", targetUserId);
+          const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: targetUserId, role });
+          if (error) throw error;
+          return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
 
-      if (action === "delete_user") {
-        const { error } = await supabaseAdmin.auth.admin.deleteUser(targetUserId);
-        if (error) throw error;
-        return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        if (action === "delete_user") {
+          const { error } = await supabaseAdmin.auth.admin.deleteUser(targetUserId);
+          if (error) throw error;
+          return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
       }
     }
 
