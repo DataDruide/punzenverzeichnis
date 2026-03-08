@@ -189,7 +189,7 @@ const Kontakte = () => {
                   <TableHead>Ort</TableHead>
                   <TableHead>Mitgliedsnr.</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="w-20"></TableHead>
+                  {isAdmin && <TableHead className="w-20"></TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
