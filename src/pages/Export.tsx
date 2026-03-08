@@ -100,9 +100,12 @@ const exportSinglePunzePDF = (punze: any) => {
 };
 
 const Export = () => {
+  const { isAdminOrAbove } = useAuth();
   const { data: contacts } = useContacts();
   const { data: images } = useImages();
   const { data: punzen } = useAllPunzen();
+
+  if (!isAdminOrAbove) return <Navigate to="/" replace />;
 
   const exports = [
     { title: 'Punzenliste als PDF', desc: 'Alle Punzen als PDF-Dokument', icon: Stamp,
