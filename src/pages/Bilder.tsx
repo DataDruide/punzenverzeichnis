@@ -182,6 +182,7 @@ const Bilder = () => {
             </div>
           </DialogContent>
         </Dialog>
+        )}
       </div>
 
       <Card>
