@@ -121,6 +121,179 @@ export type Database = {
           },
         ]
       }
+      kategorien: {
+        Row: {
+          beschreibung: string | null
+          created_at: string
+          id: string
+          name: string
+          sort_order: number | null
+        }
+        Insert: {
+          beschreibung?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          sort_order?: number | null
+        }
+        Update: {
+          beschreibung?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          sort_order?: number | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          ansprechpartner: string | null
+          bemerkungen: string | null
+          created_at: string
+          darf_recherchieren: boolean | null
+          datenschutz_akzeptiert_am: string | null
+          email_kontakt: string | null
+          firma_aktiv: boolean | null
+          firmenname: string
+          freigeschaltet: boolean | null
+          gesperrt: boolean | null
+          id: string
+          ort: string | null
+          plz: string | null
+          recherche_gueltig_bis: string | null
+          strasse: string | null
+          telefon: string | null
+          updated_at: string
+          user_id: string
+          webseite: string | null
+        }
+        Insert: {
+          ansprechpartner?: string | null
+          bemerkungen?: string | null
+          created_at?: string
+          darf_recherchieren?: boolean | null
+          datenschutz_akzeptiert_am?: string | null
+          email_kontakt?: string | null
+          firma_aktiv?: boolean | null
+          firmenname?: string
+          freigeschaltet?: boolean | null
+          gesperrt?: boolean | null
+          id?: string
+          ort?: string | null
+          plz?: string | null
+          recherche_gueltig_bis?: string | null
+          strasse?: string | null
+          telefon?: string | null
+          updated_at?: string
+          user_id: string
+          webseite?: string | null
+        }
+        Update: {
+          ansprechpartner?: string | null
+          bemerkungen?: string | null
+          created_at?: string
+          darf_recherchieren?: boolean | null
+          datenschutz_akzeptiert_am?: string | null
+          email_kontakt?: string | null
+          firma_aktiv?: boolean | null
+          firmenname?: string
+          freigeschaltet?: boolean | null
+          gesperrt?: boolean | null
+          id?: string
+          ort?: string | null
+          plz?: string | null
+          recherche_gueltig_bis?: string | null
+          strasse?: string | null
+          telefon?: string | null
+          updated_at?: string
+          user_id?: string
+          webseite?: string | null
+        }
+        Relationships: []
+      }
+      punzen: {
+        Row: {
+          bemerkungen_admin: string | null
+          beschreibung: string | null
+          bild_abdruck_path: string | null
+          bild_vorlage_path: string | null
+          created_at: string
+          einwilligung_akzeptiert_am: string | null
+          gesperrt: boolean | null
+          id: string
+          kategorie_id: string | null
+          updated_at: string
+          user_id: string
+          veroeffentlicht: boolean | null
+          verwendung_beginn: string | null
+          verwendung_ende: string | null
+          zur_publikation_eingereicht: boolean | null
+        }
+        Insert: {
+          bemerkungen_admin?: string | null
+          beschreibung?: string | null
+          bild_abdruck_path?: string | null
+          bild_vorlage_path?: string | null
+          created_at?: string
+          einwilligung_akzeptiert_am?: string | null
+          gesperrt?: boolean | null
+          id?: string
+          kategorie_id?: string | null
+          updated_at?: string
+          user_id: string
+          veroeffentlicht?: boolean | null
+          verwendung_beginn?: string | null
+          verwendung_ende?: string | null
+          zur_publikation_eingereicht?: boolean | null
+        }
+        Update: {
+          bemerkungen_admin?: string | null
+          beschreibung?: string | null
+          bild_abdruck_path?: string | null
+          bild_vorlage_path?: string | null
+          created_at?: string
+          einwilligung_akzeptiert_am?: string | null
+          gesperrt?: boolean | null
+          id?: string
+          kategorie_id?: string | null
+          updated_at?: string
+          user_id?: string
+          veroeffentlicht?: boolean | null
+          verwendung_beginn?: string | null
+          verwendung_ende?: string | null
+          zur_publikation_eingereicht?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "punzen_kategorie_id_fkey"
+            columns: ["kategorie_id"]
+            isOneToOne: false
+            referencedRelation: "kategorien"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settings: {
+        Row: {
+          id: string
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          id?: string
+          key: string
+          updated_at?: string
+          value?: string
+        }
+        Update: {
+          id?: string
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -154,6 +327,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_admin_or_above: { Args: { _user_id: string }; Returns: boolean }
       is_authenticated: { Args: never; Returns: boolean }
     }
     Enums: {
