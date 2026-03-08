@@ -10,6 +10,10 @@ const navItems = [
   { to: '/export', label: 'Datenexport', icon: Download },
 ];
 
+const adminItems = [
+  { to: '/admin', label: 'Benutzerverwaltung', icon: Shield },
+];
+
 const AppSidebar = () => {
   const location = useLocation();
   const { user, isAdmin, signOut } = useAuth();
