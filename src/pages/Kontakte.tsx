@@ -13,6 +13,8 @@ import { useContacts, useCreateContact, useUpdateContact, useDeleteContact } fro
 import type { ContactInsert, ContactUpdate } from '@/lib/api';
 import { toast } from '@/hooks/use-toast';
 
+type ContactStatus = 'aktiv' | 'inaktiv' | 'ausstehend';
+
 const emptyForm = {
   vorname: '', nachname: '', email: '', telefon: '', firma: '', position: '',
   strasse: '', plz: '', ort: '', bundesland: '', mitgliedsnummer: '', status: 'ausstehend' as const,
