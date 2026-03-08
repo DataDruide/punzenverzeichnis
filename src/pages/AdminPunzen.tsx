@@ -15,7 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
-import { Stamp, Search, Eye, CheckCircle, Clock, Send, XCircle, Undo2 } from 'lucide-react';
+import { Stamp, Search, Eye, CheckCircle, Clock, Send, XCircle, Undo2, MessageSquare, Unlock } from 'lucide-react';
 
 const AdminPunzen = () => {
   const { isAdminOrAbove } = useAuth();
