@@ -61,7 +61,8 @@ const AdminUsers = () => {
     }
   };
 
-  if (!isAdmin) return <Navigate to="/" replace />;
+  const { isAdminOrAbove } = useAuth();
+  if (!isAdminOrAbove) return <Navigate to="/" replace />;
 
   return (
     <div className="p-6 space-y-6">
