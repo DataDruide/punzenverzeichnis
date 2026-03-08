@@ -41,8 +41,9 @@ Deno.serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    const { data: isAdmin } = await supabaseAdmin.rpc("has_role", { _user_id: userId, _role: "admin" });
-    if (!isAdmin) {
+    // Check admin or superadmin
+    const { data: isAdminUser } = await supabaseAdmin.rpc("is_admin_or_above", { _user_id: userId });
+    if (!isAdminUser) {
       console.log("User is not admin");
       return new Response(JSON.stringify({ error: "Forbidden" }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }

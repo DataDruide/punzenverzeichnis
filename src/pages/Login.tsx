@@ -67,7 +67,7 @@ const Login = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">
-            Verbands<span className="text-accent">portal</span>
+            Zentrales <span className="text-accent">Punzenverzeichnis</span>
           </CardTitle>
           <CardDescription>
             {mode === 'login' && 'Melden Sie sich an, um fortzufahren'}

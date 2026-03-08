@@ -20,7 +20,7 @@ interface UserRow {
 }
 
 const AdminUsers = () => {
-  const { isAdmin, user } = useAuth();
+  const { isAdmin, isAdminOrAbove, isSuperAdmin, user } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -61,7 +61,7 @@ const AdminUsers = () => {
     }
   };
 
-  if (!isAdmin) return <Navigate to="/" replace />;
+  if (!isAdminOrAbove) return <Navigate to="/" replace />;
 
   return (
     <div className="p-6 space-y-6">
@@ -108,8 +108,8 @@ const AdminUsers = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="user">Benutzer</SelectItem>
-                          <SelectItem value="moderator">Moderator</SelectItem>
                           <SelectItem value="admin">Admin</SelectItem>
+                          {isSuperAdmin && <SelectItem value="superadmin">SuperAdmin</SelectItem>}
                         </SelectContent>
                       </Select>
                     </TableCell>

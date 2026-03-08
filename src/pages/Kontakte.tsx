@@ -22,7 +22,7 @@ const emptyForm: { vorname: string; nachname: string; email: string; telefon: st
 };
 
 const Kontakte = () => {
-  const { isAdmin } = useAuth();
+  const { isAdminOrAbove: isAdmin } = useAuth();
   const { data: contacts, isLoading } = useContacts();
   const createMutation = useCreateContact();
   const updateMutation = useUpdateContact();
