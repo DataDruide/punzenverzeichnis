@@ -109,8 +109,8 @@ const AdminUsers = () => {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="user">Benutzer</SelectItem>
-                          <SelectItem value="moderator">Moderator</SelectItem>
                           <SelectItem value="admin">Admin</SelectItem>
+                          {isSuperAdmin && <SelectItem value="superadmin">SuperAdmin</SelectItem>}
                         </SelectContent>
                       </Select>
                     </TableCell>
