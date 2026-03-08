@@ -1,4 +1,5 @@
 import { useState, useMemo, useRef } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Search, Plus, Grid, List, Trash2, Tag, Upload, Shield, AlertTriangle } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
