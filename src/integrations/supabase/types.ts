@@ -14,7 +14,113 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      contacts: {
+        Row: {
+          bundesland: string | null
+          created_at: string
+          email: string
+          firma: string | null
+          id: string
+          mitgliedsnummer: string | null
+          nachname: string
+          ort: string | null
+          plz: string | null
+          position: string | null
+          status: string
+          strasse: string | null
+          telefon: string | null
+          updated_at: string
+          vorname: string
+        }
+        Insert: {
+          bundesland?: string | null
+          created_at?: string
+          email: string
+          firma?: string | null
+          id?: string
+          mitgliedsnummer?: string | null
+          nachname: string
+          ort?: string | null
+          plz?: string | null
+          position?: string | null
+          status?: string
+          strasse?: string | null
+          telefon?: string | null
+          updated_at?: string
+          vorname: string
+        }
+        Update: {
+          bundesland?: string | null
+          created_at?: string
+          email?: string
+          firma?: string | null
+          id?: string
+          mitgliedsnummer?: string | null
+          nachname?: string
+          ort?: string | null
+          plz?: string | null
+          position?: string | null
+          status?: string
+          strasse?: string | null
+          telefon?: string | null
+          updated_at?: string
+          vorname?: string
+        }
+        Relationships: []
+      }
+      images: {
+        Row: {
+          beschreibung: string | null
+          created_at: string
+          dateiname: string
+          groesse: string | null
+          id: string
+          kategorie: string | null
+          kontakt_id: string | null
+          mime_type: string | null
+          storage_path: string
+          tags: string[] | null
+          titel: string
+          updated_at: string
+        }
+        Insert: {
+          beschreibung?: string | null
+          created_at?: string
+          dateiname: string
+          groesse?: string | null
+          id?: string
+          kategorie?: string | null
+          kontakt_id?: string | null
+          mime_type?: string | null
+          storage_path: string
+          tags?: string[] | null
+          titel: string
+          updated_at?: string
+        }
+        Update: {
+          beschreibung?: string | null
+          created_at?: string
+          dateiname?: string
+          groesse?: string | null
+          id?: string
+          kategorie?: string | null
+          kontakt_id?: string | null
+          mime_type?: string | null
+          storage_path?: string
+          tags?: string[] | null
+          titel?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "images_kontakt_id_fkey"
+            columns: ["kontakt_id"]
+            isOneToOne: false
+            referencedRelation: "contacts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
