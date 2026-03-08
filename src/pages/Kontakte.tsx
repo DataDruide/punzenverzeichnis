@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Search, Plus, Download, Trash2, Edit } from 'lucide-react';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -21,6 +22,7 @@ const emptyForm: { vorname: string; nachname: string; email: string; telefon: st
 };
 
 const Kontakte = () => {
+  const { isAdmin } = useAuth();
   const { data: contacts, isLoading } = useContacts();
   const createMutation = useCreateContact();
   const updateMutation = useUpdateContact();
@@ -114,9 +116,11 @@ const Kontakte = () => {
             <Download className="h-4 w-4 mr-1" /> CSV Export
           </Button>
           <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) { setForm(emptyForm); setEditingId(null); } }}>
+          {isAdmin && (
             <DialogTrigger asChild>
               <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Neuer Kontakt</Button>
             </DialogTrigger>
+          )}
             <DialogContent className="max-w-lg">
               <DialogHeader><DialogTitle>{editingId ? 'Kontakt bearbeiten' : 'Neuer Kontakt'}</DialogTitle></DialogHeader>
               <div className="grid grid-cols-2 gap-3 mt-4">
@@ -185,7 +189,7 @@ const Kontakte = () => {
                   <TableHead>Ort</TableHead>
                   <TableHead>Mitgliedsnr.</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead className="w-20"></TableHead>
+                  {isAdmin && <TableHead className="w-20"></TableHead>}
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -197,12 +201,14 @@ const Kontakte = () => {
                     <TableCell className="text-sm">{c.ort}</TableCell>
                     <TableCell className="text-sm font-mono">{c.mitgliedsnummer}</TableCell>
                     <TableCell><StatusBadge status={c.status as 'aktiv' | 'inaktiv' | 'ausstehend'} /></TableCell>
+                    {isAdmin && (
                     <TableCell>
                       <div className="flex gap-1">
                         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(c)}><Edit className="h-3.5 w-3.5" /></Button>
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => handleDelete(c.id)} disabled={deleteMutation.isPending}><Trash2 className="h-3.5 w-3.5" /></Button>
                       </div>
                     </TableCell>
+                    )}
                   </TableRow>
                 ))}
                 {filtered.length === 0 && (
