@@ -55,17 +55,18 @@ Deno.serve(async (req) => {
         const body = JSON.parse(text);
         const { action, userId: targetUserId, role } = body;
 
-      if (action === "update_role") {
-        await supabaseAdmin.from("user_roles").delete().eq("user_id", targetUserId);
-        const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: targetUserId, role });
-        if (error) throw error;
-        return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
-      }
+        if (action === "update_role") {
+          await supabaseAdmin.from("user_roles").delete().eq("user_id", targetUserId);
+          const { error } = await supabaseAdmin.from("user_roles").insert({ user_id: targetUserId, role });
+          if (error) throw error;
+          return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
 
-      if (action === "delete_user") {
-        const { error } = await supabaseAdmin.auth.admin.deleteUser(targetUserId);
-        if (error) throw error;
-        return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        if (action === "delete_user") {
+          const { error } = await supabaseAdmin.auth.admin.deleteUser(targetUserId);
+          if (error) throw error;
+          return new Response(JSON.stringify({ success: true }), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        }
       }
     }
 
