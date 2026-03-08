@@ -66,7 +66,7 @@ const AdminPunzen = () => {
   // Unlock a punze for editing (approve edit request)
   const handleUnlock = async (id: string) => {
     try {
-      await updateMutation.mutateAsync({ id, data: { veroeffentlicht: false, gesperrt: false, bearbeitung_beantragt: false } as any });
+      await updateMutation.mutateAsync({ id, data: { veroeffentlicht: false, gesperrt: false, bearbeitung_beantragt: false } });
       toast({ title: 'Entsperrt', description: 'Punze wurde zur Bearbeitung freigegeben.' });
     } catch (err) {
       toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
@@ -173,7 +173,7 @@ const AdminPunzen = () => {
                               <Undo2 className="h-3.5 w-3.5 mr-1" />Depublizieren
                             </Button>
                           )}
-                          {(p as any).bearbeitung_beantragt && (
+                          {p.bearbeitung_beantragt && (
                             <Button size="sm" variant="default" className="bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => handleUnlock(p.id)}>
                               <Unlock className="h-3.5 w-3.5 mr-1" />Bearbeitung freigeben
                             </Button>

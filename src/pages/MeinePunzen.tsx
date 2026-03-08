@@ -84,7 +84,7 @@ const MeinePunzen = () => {
   // (D) Bearbeitung beantragen for published/locked punzen
   const handleRequestEdit = async (id: string) => {
     try {
-      await updateMutation.mutateAsync({ id, data: { bearbeitung_beantragt: true } as any });
+      await updateMutation.mutateAsync({ id, data: { bearbeitung_beantragt: true } });
       toast({ title: 'Anfrage gesendet', description: 'Ein Administrator wird Ihre Anfrage prüfen.' });
     } catch (err) {
       toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
@@ -230,7 +230,7 @@ const MeinePunzen = () => {
                           <p className="text-xs text-muted-foreground italic flex items-center gap-1">
                             <Lock className="h-3 w-3" />Dieser Datensatz ist gesperrt.
                           </p>
-                          {!(p as any).bearbeitung_beantragt ? (
+                          {!p.bearbeitung_beantragt ? (
                             <Button variant="outline" size="sm" onClick={() => handleRequestEdit(p.id)}>
                               <MessageSquare className="h-3.5 w-3.5 mr-1" />Bearbeitung beantragen
                             </Button>

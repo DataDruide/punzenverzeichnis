@@ -1,3 +1,5 @@
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 import { Download, FileText, Image, Users, Stamp } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -98,9 +100,12 @@ const exportSinglePunzePDF = (punze: any) => {
 };
 
 const Export = () => {
+  const { isAdminOrAbove } = useAuth();
   const { data: contacts } = useContacts();
   const { data: images } = useImages();
   const { data: punzen } = useAllPunzen();
+
+  if (!isAdminOrAbove) return <Navigate to="/" replace />;
 
   const exports = [
     { title: 'Punzenliste als PDF', desc: 'Alle Punzen als PDF-Dokument', icon: Stamp,
