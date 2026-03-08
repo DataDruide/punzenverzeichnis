@@ -17,6 +17,7 @@ import { toast } from '@/hooks/use-toast';
 const kategorien = ['Veranstaltungen', 'Sitzungen', 'Messen', 'Schulungen', 'Sonstiges'];
 
 const Bilder = () => {
+  const { isAdmin } = useAuth();
   const { data: images, isLoading } = useImages();
   const uploadMutation = useUploadAndCreateImage();
   const deleteMutation = useDeleteImage();
