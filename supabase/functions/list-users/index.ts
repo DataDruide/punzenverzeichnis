@@ -26,13 +26,13 @@ Deno.serve(async (req) => {
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const { data: claimsData, error: claimsError } = await supabaseUser.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
-      console.log("getClaims error:", claimsError?.message);
+    const { data: { user: callingUser }, error: userError } = await supabaseUser.auth.getUser();
+    if (userError || !callingUser) {
+      console.log("getUser error:", userError?.message);
       return new Response(JSON.stringify({ error: "Unauthorized" }), { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } });
     }
 
-    const userId = claimsData.claims.sub;
+    const userId = callingUser.id;
     console.log("Authenticated user:", userId);
 
     // Admin client for privileged operations
