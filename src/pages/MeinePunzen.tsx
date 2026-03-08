@@ -84,7 +84,7 @@ const MeinePunzen = () => {
   // (D) Bearbeitung beantragen for published/locked punzen
   const handleRequestEdit = async (id: string) => {
     try {
-      await updateMutation.mutateAsync({ id, data: { bearbeitung_beantragt: true } as any });
+      await updateMutation.mutateAsync({ id, data: { bearbeitung_beantragt: true } });
       toast({ title: 'Anfrage gesendet', description: 'Ein Administrator wird Ihre Anfrage prüfen.' });
     } catch (err) {
       toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
