@@ -213,6 +213,7 @@ export type Database = {
       }
       punzen: {
         Row: {
+          bearbeitung_beantragt: boolean | null
           bemerkungen_admin: string | null
           beschreibung: string | null
           bild_abdruck_path: string | null
@@ -230,6 +231,7 @@ export type Database = {
           zur_publikation_eingereicht: boolean | null
         }
         Insert: {
+          bearbeitung_beantragt?: boolean | null
           bemerkungen_admin?: string | null
           beschreibung?: string | null
           bild_abdruck_path?: string | null
@@ -247,6 +249,7 @@ export type Database = {
           zur_publikation_eingereicht?: boolean | null
         }
         Update: {
+          bearbeitung_beantragt?: boolean | null
           bemerkungen_admin?: string | null
           beschreibung?: string | null
           bild_abdruck_path?: string | null
