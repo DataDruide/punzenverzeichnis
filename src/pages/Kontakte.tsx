@@ -201,12 +201,14 @@ const Kontakte = () => {
                     <TableCell className="text-sm">{c.ort}</TableCell>
                     <TableCell className="text-sm font-mono">{c.mitgliedsnummer}</TableCell>
                     <TableCell><StatusBadge status={c.status as 'aktiv' | 'inaktiv' | 'ausstehend'} /></TableCell>
+                    {isAdmin && (
                     <TableCell>
                       <div className="flex gap-1">
                         <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleEdit(c)}><Edit className="h-3.5 w-3.5" /></Button>
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-destructive" onClick={() => handleDelete(c.id)} disabled={deleteMutation.isPending}><Trash2 className="h-3.5 w-3.5" /></Button>
                       </div>
                     </TableCell>
+                    )}
                   </TableRow>
                 ))}
                 {filtered.length === 0 && (
