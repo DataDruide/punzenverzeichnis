@@ -173,6 +173,11 @@ const AdminPunzen = () => {
                               <Undo2 className="h-3.5 w-3.5 mr-1" />Depublizieren
                             </Button>
                           )}
+                          {(p as any).bearbeitung_beantragt && (
+                            <Button size="sm" variant="default" className="bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => handleUnlock(p.id)}>
+                              <Unlock className="h-3.5 w-3.5 mr-1" />Bearbeitung freigeben
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
