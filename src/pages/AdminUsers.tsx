@@ -26,10 +26,7 @@ const AdminUsers = () => {
 
   const fetchUsers = async () => {
     setIsLoading(true);
-    const { data: { session } } = await supabase.auth.getSession();
-    const res = await supabase.functions.invoke('list-users', {
-      headers: { Authorization: `Bearer ${session?.access_token}` },
-    });
+    const res = await supabase.functions.invoke('list-users');
     if (res.error) {
       toast({ title: 'Fehler', description: 'Benutzer konnten nicht geladen werden.', variant: 'destructive' });
     } else {
@@ -41,10 +38,7 @@ const AdminUsers = () => {
   useEffect(() => { fetchUsers(); }, []);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
-    const { data: { session } } = await supabase.auth.getSession();
     const res = await supabase.functions.invoke('list-users', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${session?.access_token}` },
       body: { action: 'update_role', userId, role: newRole },
     });
     if (res.error) {
@@ -56,10 +50,7 @@ const AdminUsers = () => {
   };
 
   const handleDeleteUser = async (userId: string) => {
-    const { data: { session } } = await supabase.auth.getSession();
     const res = await supabase.functions.invoke('list-users', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${session?.access_token}` },
       body: { action: 'delete_user', userId },
     });
     if (res.error) {
