@@ -104,6 +104,7 @@ const Bilder = () => {
           <h1 className="text-2xl font-bold">Bildverwaltung</h1>
           <p className="text-sm text-muted-foreground mt-1">{images?.length ?? 0} Bilder verwalten</p>
         </div>
+        {isAdmin && (
         <Dialog open={dialogOpen} onOpenChange={o => { setDialogOpen(o); if (!o) { setForm({ titel: '', beschreibung: '', kategorie: 'Veranstaltungen', tags: '' }); setSelectedFile(null); setFilePreview(null); setFileErrors([]); } }}>
           <DialogTrigger asChild>
             <Button size="sm"><Plus className="h-4 w-4 mr-1" /> Bild hochladen</Button>
