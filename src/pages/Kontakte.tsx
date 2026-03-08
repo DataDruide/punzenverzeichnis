@@ -15,9 +15,9 @@ import { toast } from '@/hooks/use-toast';
 
 type ContactStatus = 'aktiv' | 'inaktiv' | 'ausstehend';
 
-const emptyForm = {
+const emptyForm: { vorname: string; nachname: string; email: string; telefon: string; firma: string; position: string; strasse: string; plz: string; ort: string; bundesland: string; mitgliedsnummer: string; status: ContactStatus } = {
   vorname: '', nachname: '', email: '', telefon: '', firma: '', position: '',
-  strasse: '', plz: '', ort: '', bundesland: '', mitgliedsnummer: '', status: 'ausstehend' as const,
+  strasse: '', plz: '', ort: '', bundesland: '', mitgliedsnummer: '', status: 'ausstehend',
 };
 
 const Kontakte = () => {
