@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useMyPunzen, useCreatePunze, useUpdatePunze, useDeletePunze, useUploadPunzeImage, useKategorien, useSettings } from '@/hooks/useData';
 import { getImagePublicUrl } from '@/lib/api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,7 +12,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { toast } from '@/hooks/use-toast';
-import { Plus, Upload, Stamp, Send, Edit, Trash2, Info, CheckCircle, Clock, Lock } from 'lucide-react';
+import { Plus, Upload, Stamp, Send, Edit, Trash2, Info, CheckCircle, Clock, Lock, MessageSquare } from 'lucide-react';
 
 const MeinePunzen = () => {
   const { user } = useAuth();
@@ -46,13 +46,8 @@ const MeinePunzen = () => {
     try {
       let bild_vorlage_path: string | undefined;
       let bild_abdruck_path: string | undefined;
-
-      if (vorlageFile) {
-        bild_vorlage_path = await uploadMutation.mutateAsync({ file: vorlageFile, prefix: 'vorlage' });
-      }
-      if (abdruckFile) {
-        bild_abdruck_path = await uploadMutation.mutateAsync({ file: abdruckFile, prefix: 'abdruck' });
-      }
+      if (vorlageFile) bild_vorlage_path = await uploadMutation.mutateAsync({ file: vorlageFile, prefix: 'vorlage' });
+      if (abdruckFile) bild_abdruck_path = await uploadMutation.mutateAsync({ file: abdruckFile, prefix: 'abdruck' });
 
       const punzeData = {
         beschreibung: form.beschreibung,
@@ -67,11 +62,7 @@ const MeinePunzen = () => {
         await updateMutation.mutateAsync({ id: editingId, data: punzeData });
         toast({ title: 'Gespeichert', description: 'Punze wurde aktualisiert.' });
       } else {
-        await createMutation.mutateAsync({
-          ...punzeData,
-          user_id: user.id,
-          einwilligung_akzeptiert_am: new Date().toISOString(),
-        });
+        await createMutation.mutateAsync({ ...punzeData, user_id: user.id, einwilligung_akzeptiert_am: new Date().toISOString() });
         toast({ title: 'Erstellt', description: 'Neue Punze wurde angelegt.' });
       }
       setDialogOpen(false);
@@ -85,6 +76,16 @@ const MeinePunzen = () => {
     try {
       await updateMutation.mutateAsync({ id, data: { zur_publikation_eingereicht: true } });
       toast({ title: 'Eingereicht', description: 'Punze wurde zur Publikation weitergeleitet.' });
+    } catch (err) {
+      toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
+    }
+  };
+
+  // (D) Bearbeitung beantragen for published/locked punzen
+  const handleRequestEdit = async (id: string) => {
+    try {
+      await updateMutation.mutateAsync({ id, data: { bearbeitung_beantragt: true } as any });
+      toast({ title: 'Anfrage gesendet', description: 'Ein Administrator wird Ihre Anfrage prüfen.' });
     } catch (err) {
       toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
     }
@@ -110,7 +111,7 @@ const MeinePunzen = () => {
     }
   };
 
-  const getStatusBadge = (p: NonNullable<typeof punzen>[0]) => {
+  const getStatusBadge = (p: any) => {
     if (p.veroeffentlicht) return <Badge className="bg-success/20 text-success border-success/30"><CheckCircle className="h-3 w-3 mr-1" />Publiziert</Badge>;
     if (p.gesperrt) return <Badge variant="destructive"><Lock className="h-3 w-3 mr-1" />Gesperrt</Badge>;
     if (p.zur_publikation_eingereicht) return <Badge className="bg-accent/20 text-accent border-accent/30"><Clock className="h-3 w-3 mr-1" />Eingereicht</Badge>;
@@ -130,40 +131,31 @@ const MeinePunzen = () => {
           </DialogTrigger>
           <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader><DialogTitle>{editingId ? 'Punze bearbeiten' : 'Neue Punze anlegen'}</DialogTitle></DialogHeader>
-
             {!editingId && datenschutzHinweis && (
               <div className="flex items-start gap-2 p-3 bg-accent/10 border border-accent/20 rounded-md">
                 <Info className="h-4 w-4 text-accent mt-0.5 shrink-0" />
                 <p className="text-xs text-muted-foreground">{datenschutzHinweis}</p>
               </div>
             )}
-
             <div className="space-y-4 mt-2">
-              {/* Bild Vorlage */}
               <div className="space-y-1.5">
                 <Label className="text-xs">Reprofähige Vorlage (Bild)</Label>
-                <div className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 transition-colors"
-                  onClick={() => vorlageRef.current?.click()}>
+                <div className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 transition-colors" onClick={() => vorlageRef.current?.click()}>
                   <input ref={vorlageRef} type="file" className="hidden" accept="image/*" onChange={e => setVorlageFile(e.target.files?.[0] || null)} />
                   {vorlageFile ? <p className="text-sm">{vorlageFile.name}</p> : <div className="flex flex-col items-center gap-1"><Upload className="h-5 w-5 text-muted-foreground" /><p className="text-xs text-muted-foreground">Vorlage hochladen</p></div>}
                 </div>
               </div>
-
-              {/* Bild Abdruck */}
               <div className="space-y-1.5">
                 <Label className="text-xs">Stempelabdruck (Pflichtfeld)</Label>
-                <div className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 transition-colors"
-                  onClick={() => abdruckRef.current?.click()}>
+                <div className="border-2 border-dashed border-border rounded-lg p-4 text-center cursor-pointer hover:border-primary/50 transition-colors" onClick={() => abdruckRef.current?.click()}>
                   <input ref={abdruckRef} type="file" className="hidden" accept="image/*" onChange={e => setAbdruckFile(e.target.files?.[0] || null)} />
                   {abdruckFile ? <p className="text-sm">{abdruckFile.name}</p> : <div className="flex flex-col items-center gap-1"><Upload className="h-5 w-5 text-muted-foreground" /><p className="text-xs text-muted-foreground">Abdruck hochladen</p></div>}
                 </div>
               </div>
-
               <div className="space-y-1.5">
                 <Label className="text-xs">Beschreibung der Punze</Label>
                 <Textarea value={form.beschreibung} onChange={e => setForm(p => ({ ...p, beschreibung: e.target.value }))} rows={3} />
               </div>
-
               <div className="grid grid-cols-2 gap-3">
                 <div className="space-y-1.5">
                   <Label className="text-xs">Verwendung seit</Label>
@@ -174,7 +166,6 @@ const MeinePunzen = () => {
                   <Input type="date" value={form.verwendung_ende} onChange={e => setForm(p => ({ ...p, verwendung_ende: e.target.value }))} />
                 </div>
               </div>
-
               <div className="space-y-1.5">
                 <Label className="text-xs">Kategorie</Label>
                 <Select value={form.kategorie_id} onValueChange={v => setForm(p => ({ ...p, kategorie_id: v }))}>
@@ -185,7 +176,6 @@ const MeinePunzen = () => {
                 </Select>
               </div>
             </div>
-
             <div className="flex justify-end gap-2 mt-4">
               <Button variant="outline" onClick={() => { setDialogOpen(false); resetForm(); }}>Abbrechen</Button>
               <Button onClick={handleSave} disabled={createMutation.isPending || updateMutation.isPending || uploadMutation.isPending}>
@@ -204,22 +194,13 @@ const MeinePunzen = () => {
             <Card key={p.id}>
               <CardContent className="p-4">
                 <div className="flex gap-4">
-                  {/* Images */}
                   <div className="flex gap-2 shrink-0">
-                    {p.bild_vorlage_path && (
-                      <img src={getImagePublicUrl(p.bild_vorlage_path)} alt="Vorlage" className="w-20 h-20 object-cover rounded border" />
-                    )}
-                    {p.bild_abdruck_path && (
-                      <img src={getImagePublicUrl(p.bild_abdruck_path)} alt="Abdruck" className="w-20 h-20 object-cover rounded border" />
-                    )}
+                    {p.bild_vorlage_path && <img src={getImagePublicUrl(p.bild_vorlage_path)} alt="Vorlage" className="w-20 h-20 object-cover rounded border" />}
+                    {p.bild_abdruck_path && <img src={getImagePublicUrl(p.bild_abdruck_path)} alt="Abdruck" className="w-20 h-20 object-cover rounded border" />}
                     {!p.bild_vorlage_path && !p.bild_abdruck_path && (
-                      <div className="w-20 h-20 bg-muted rounded flex items-center justify-center">
-                        <Stamp className="h-8 w-8 text-muted-foreground" />
-                      </div>
+                      <div className="w-20 h-20 bg-muted rounded flex items-center justify-center"><Stamp className="h-8 w-8 text-muted-foreground" /></div>
                     )}
                   </div>
-
-                  {/* Details */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between">
                       <div>
@@ -233,28 +214,32 @@ const MeinePunzen = () => {
                       </div>
                       {getStatusBadge(p)}
                     </div>
-
-                    {/* Actions */}
                     <div className="flex gap-2 mt-3">
                       {!p.veroeffentlicht && !p.gesperrt && (
                         <>
-                          <Button variant="outline" size="sm" onClick={() => handleEdit(p)}>
-                            <Edit className="h-3.5 w-3.5 mr-1" />Bearbeiten
-                          </Button>
+                          <Button variant="outline" size="sm" onClick={() => handleEdit(p)}><Edit className="h-3.5 w-3.5 mr-1" />Bearbeiten</Button>
                           {!p.zur_publikation_eingereicht && (
-                            <Button size="sm" variant="default" onClick={() => handleSubmitForReview(p.id)}>
-                              <Send className="h-3.5 w-3.5 mr-1" />Zur Publikation einreichen
-                            </Button>
+                            <Button size="sm" variant="default" onClick={() => handleSubmitForReview(p.id)}><Send className="h-3.5 w-3.5 mr-1" />Zur Publikation einreichen</Button>
                           )}
-                          <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDelete(p.id)}>
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
+                          <Button variant="ghost" size="sm" className="text-destructive" onClick={() => handleDelete(p.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
                         </>
                       )}
-                      {p.veroeffentlicht && (
-                        <p className="text-xs text-muted-foreground italic flex items-center gap-1">
-                          <Lock className="h-3 w-3" />Dieser Datensatz wurde publiziert und kann derzeit nicht bearbeitet werden.
-                        </p>
+                      {/* (D) Bearbeitung beantragen Button */}
+                      {(p.veroeffentlicht || p.gesperrt) && (
+                        <div className="flex items-center gap-2">
+                          <p className="text-xs text-muted-foreground italic flex items-center gap-1">
+                            <Lock className="h-3 w-3" />Dieser Datensatz ist gesperrt.
+                          </p>
+                          {!(p as any).bearbeitung_beantragt ? (
+                            <Button variant="outline" size="sm" onClick={() => handleRequestEdit(p.id)}>
+                              <MessageSquare className="h-3.5 w-3.5 mr-1" />Bearbeitung beantragen
+                            </Button>
+                          ) : (
+                            <Badge variant="outline" className="text-accent border-accent/30 text-[10px]">
+                              <Clock className="h-2.5 w-2.5 mr-0.5" />Anfrage gesendet
+                            </Badge>
+                          )}
+                        </div>
                       )}
                     </div>
                   </div>

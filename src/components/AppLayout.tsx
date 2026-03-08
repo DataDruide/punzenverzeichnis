@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom';
 import AppSidebar from './AppSidebar';
+import DatenschutzDialog from './DatenschutzDialog';
 
 const AppLayout = () => {
   return (
@@ -8,6 +9,8 @@ const AppLayout = () => {
       <main className="flex-1 overflow-auto">
         <Outlet />
       </main>
+      {/* (J) Datenschutz-Bestätigung beim Login */}
+      <DatenschutzDialog />
     </div>
   );
 };
