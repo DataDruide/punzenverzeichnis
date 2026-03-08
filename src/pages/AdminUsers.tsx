@@ -38,10 +38,7 @@ const AdminUsers = () => {
   useEffect(() => { fetchUsers(); }, []);
 
   const handleRoleChange = async (userId: string, newRole: string) => {
-    const { data: { session } } = await supabase.auth.getSession();
     const res = await supabase.functions.invoke('list-users', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${session?.access_token}` },
       body: { action: 'update_role', userId, role: newRole },
     });
     if (res.error) {
