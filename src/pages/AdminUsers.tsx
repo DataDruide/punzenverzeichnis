@@ -20,7 +20,7 @@ interface UserRow {
 }
 
 const AdminUsers = () => {
-  const { isAdmin, user } = useAuth();
+  const { isAdmin, isAdminOrAbove, isSuperAdmin, user } = useAuth();
   const [users, setUsers] = useState<UserRow[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
