@@ -26,10 +26,7 @@ const AdminUsers = () => {
 
   const fetchUsers = async () => {
     setIsLoading(true);
-    const { data: { session } } = await supabase.auth.getSession();
-    const res = await supabase.functions.invoke('list-users', {
-      headers: { Authorization: `Bearer ${session?.access_token}` },
-    });
+    const res = await supabase.functions.invoke('list-users');
     if (res.error) {
       toast({ title: 'Fehler', description: 'Benutzer konnten nicht geladen werden.', variant: 'destructive' });
     } else {
