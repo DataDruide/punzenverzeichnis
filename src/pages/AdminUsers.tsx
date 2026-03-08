@@ -61,7 +61,6 @@ const AdminUsers = () => {
     }
   };
 
-  const { isAdminOrAbove } = useAuth();
   if (!isAdminOrAbove) return <Navigate to="/" replace />;
 
   return (
