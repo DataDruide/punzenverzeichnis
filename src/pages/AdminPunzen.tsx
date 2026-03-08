@@ -63,6 +63,16 @@ const AdminPunzen = () => {
     }
   };
 
+  // Unlock a punze for editing (approve edit request)
+  const handleUnlock = async (id: string) => {
+    try {
+      await updateMutation.mutateAsync({ id, data: { veroeffentlicht: false, gesperrt: false, bearbeitung_beantragt: false } as any });
+      toast({ title: 'Entsperrt', description: 'Punze wurde zur Bearbeitung freigegeben.' });
+    } catch (err) {
+      toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
+    }
+  };
+
   const handleSaveAdminFields = async () => {
     if (!selectedPunze) return;
     try {
