@@ -7,12 +7,14 @@ interface AuthContextType {
   session: Session | null;
   isLoading: boolean;
   isAdmin: boolean;
+  isSuperAdmin: boolean;
+  isAdminOrAbove: boolean;
   roles: string[];
   signOut: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
-  user: null, session: null, isLoading: true, isAdmin: false, roles: [], signOut: async () => {},
+  user: null, session: null, isLoading: true, isAdmin: false, isSuperAdmin: false, isAdminOrAbove: false, roles: [], signOut: async () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -32,13 +34,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (_event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
         if (session?.user) {
-          // Use setTimeout to avoid Supabase client deadlock
           setTimeout(() => fetchRoles(session.user.id), 0);
         } else {
           setRoles([]);
@@ -47,7 +47,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
     );
 
-    // THEN check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
@@ -68,9 +67,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const isAdmin = roles.includes('admin');
+  const isSuperAdmin = roles.includes('superadmin');
+  const isAdminOrAbove = isAdmin || isSuperAdmin;
 
   return (
-    <AuthContext.Provider value={{ user, session, isLoading, isAdmin, roles, signOut }}>
+    <AuthContext.Provider value={{ user, session, isLoading, isAdmin, isSuperAdmin, isAdminOrAbove, roles, signOut }}>
       {children}
     </AuthContext.Provider>
   );
