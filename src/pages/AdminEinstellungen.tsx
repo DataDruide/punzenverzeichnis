@@ -127,6 +127,7 @@ const AdminEinstellungen = () => {
           <TabsTrigger value="mail"><Mail className="h-3.5 w-3.5 mr-1" />E-Mail-Texte</TabsTrigger>
           <TabsTrigger value="datenschutz"><Shield className="h-3.5 w-3.5 mr-1" />Datenschutz</TabsTrigger>
           <TabsTrigger value="kategorien"><Tag className="h-3.5 w-3.5 mr-1" />Kategorien</TabsTrigger>
+          {isSuperAdmin && <TabsTrigger value="demo"><Sparkles className="h-3.5 w-3.5 mr-1" />Demo-Daten</TabsTrigger>}
         </TabsList>
 
         <TabsContent value="mail" className="space-y-4 mt-4">
