@@ -48,22 +48,26 @@ const Login = () => {
       setLoading(false);
       return;
     }
-    // Wait briefly for the trigger to create the profile, then update with company data
+    // Manually create profile + role since the auth trigger may not be attached
     if (data.user) {
-      // Small delay to let the database trigger create the profile
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      const { error: updateError } = await supabase
+      const userId = data.user.id;
+      // Upsert profile (insert if missing, update if trigger ran)
+      const { error: profErr } = await supabase
         .from('profiles')
-        .update({ firmenname, ansprechpartner, telefon, email_kontakt: email })
-        .eq('user_id', data.user.id);
-      if (updateError) {
-        console.warn('Profile update after registration failed, retrying...', updateError.message);
-        // Retry once after another delay
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        await supabase
-          .from('profiles')
-          .update({ firmenname, ansprechpartner, telefon, email_kontakt: email })
-          .eq('user_id', data.user.id);
+        .upsert(
+          { user_id: userId, firmenname, ansprechpartner, telefon, email_kontakt: email },
+          { onConflict: 'user_id' }
+        );
+      if (profErr) console.warn('Profile upsert failed:', profErr.message);
+
+      // Ensure user has a default role
+      const { data: existingRole } = await supabase
+        .from('user_roles')
+        .select('id')
+        .eq('user_id', userId)
+        .maybeSingle();
+      if (!existingRole) {
+        await supabase.from('user_roles').insert({ user_id: userId, role: 'user' });
       }
     }
     setLoading(false);
