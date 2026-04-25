@@ -1,7 +1,7 @@
 # Netlify Configuration for punzenverzeichnis
 
 [build]
-  command = "bun install && bun run build"
+  command = "npm install && npm run build"
   functions = "supabase/functions"
   publish = "dist"
 
@@ -47,10 +47,10 @@
 # - SUPABASE_SERVICE_ROLE_KEY (for functions)
 
 [context.production]
-  command = "bun install && bun run build"
+  command = "npm install && npm run build"
   
 [context.deploy-preview]
-  command = "bun install && bun run build:dev"
+  command = "npm install && npm run build:dev"
 
 [context.branch-deploy]
-  command = "bun install && bun run build:dev"
+  command = "npm install && npm run build:dev"
