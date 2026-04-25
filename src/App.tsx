@@ -6,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import AppLayout from "./components/AppLayout";
 
 // Lazy load page components for better code splitting
@@ -30,36 +31,38 @@ const LoadingFallback = () => <div className="flex items-center justify-center m
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Suspense fallback={<LoadingFallback />}>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/profil" element={<Profil />} />
-                <Route path="/punzen" element={<MeinePunzen />} />
-                <Route path="/recherche" element={<Recherche />} />
-                <Route path="/hilfe" element={<Hilfe />} />
-                <Route path="/admin/punzen" element={<AdminPunzen />} />
-                <Route path="/admin/users" element={<AdminUsers />} />
-                <Route path="/admin/einstellungen" element={<AdminEinstellungen />} />
-                <Route path="/kontakte" element={<Kontakte />} />
-                <Route path="/bilder" element={<Bilder />} />
-                <Route path="/export" element={<Export />} />
-              </Route>
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <ErrorBoundary>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <AuthProvider>
+            <Suspense fallback={<LoadingFallback />}>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
+                <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/profil" element={<Profil />} />
+                  <Route path="/punzen" element={<MeinePunzen />} />
+                  <Route path="/recherche" element={<Recherche />} />
+                  <Route path="/hilfe" element={<Hilfe />} />
+                  <Route path="/admin/punzen" element={<AdminPunzen />} />
+                  <Route path="/admin/users" element={<AdminUsers />} />
+                  <Route path="/admin/einstellungen" element={<AdminEinstellungen />} />
+                  <Route path="/kontakte" element={<Kontakte />} />
+                  <Route path="/bilder" element={<Bilder />} />
+                  <Route path="/export" element={<Export />} />
+                </Route>
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </Suspense>
+          </AuthProvider>
+        </BrowserRouter>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </ErrorBoundary>
 );
 
 export default App;

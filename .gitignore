@@ -12,11 +12,12 @@ dist
 dist-ssr
 *.local
 
-# Environment variables
+# Environment variables - SENSITIVE
 .env
 .env.local
 .env.production
 .env.production.local
+.env.development.local
 
 # Editor directories and files
 .vscode/*
@@ -28,3 +29,31 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# OS specific
+Thumbs.db
+.DS_Store
+
+# IDE
+.vscode/settings.json
+.vscode/launch.json
+.vscode/extensions.json
+*.code-workspace
+.idea/workspace.xml
+.idea/modules.xml
+
+# Cache
+.eslintcache
+.stylelintcache
+tsconfig.tsbuildinfo
+
+# Build artifacts
+supabase/migrations/*.sql
+
+# Credentials and secrets (if accidentally committed)
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
