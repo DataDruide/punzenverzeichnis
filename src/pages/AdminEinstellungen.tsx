@@ -219,6 +219,31 @@ const AdminEinstellungen = () => {
             </CardContent>
           </Card>
         </TabsContent>
+
+        {isSuperAdmin && (
+          <TabsContent value="demo" className="space-y-4 mt-4">
+            <Card>
+              <CardHeader><CardTitle className="text-base flex items-center gap-2"><Sparkles className="h-4 w-4 text-accent" />Demo-Daten für Präsentation</CardTitle></CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Erstellt drei Demo-Accounts (Admin, Firma, Forscher) und vier Beispiel-Punzen für die Präsentation der Software.
+                  Bei wiederholtem Aufruf werden bestehende Accounts aktualisiert (Passwort bleibt gleich).
+                </p>
+                <div className="rounded-md border p-3 text-xs space-y-1 bg-muted/30">
+                  <p><strong>demo-admin@zvp-demo.de</strong> / DemoAdmin2026! — Admin</p>
+                  <p><strong>demo-firma@zvp-demo.de</strong> / DemoFirma2026! — Firma mit Punzen</p>
+                  <p><strong>demo-forscher@zvp-demo.de</strong> / DemoForscher2026! — Recherche-Berechtigung</p>
+                </div>
+                <Button onClick={handleBootstrapDemo} disabled={demoLoading}>
+                  {demoLoading ? <><Loader2 className="h-4 w-4 mr-1 animate-spin" />Erstelle...</> : <><Sparkles className="h-4 w-4 mr-1" />Demo-Daten jetzt erstellen</>}
+                </Button>
+                {demoResult && (
+                  <pre className="text-xs bg-muted p-3 rounded-md overflow-x-auto max-h-60">{JSON.stringify(demoResult, null, 2)}</pre>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );
