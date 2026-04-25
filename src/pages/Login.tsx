@@ -42,7 +42,12 @@ const Login = () => {
       return;
     }
     setLoading(true);
-    const { data, error } = await supabase.auth.signUp({ email, password });
+    const redirectUrl = `${window.location.origin}/`;
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: redirectUrl },
+    });
     if (error) {
       toast({ title: 'Registrierung fehlgeschlagen', description: error.message, variant: 'destructive' });
       setLoading(false);
@@ -72,8 +77,8 @@ const Login = () => {
     }
     setLoading(false);
     toast({
-      title: 'Erfolgreich registriert',
-      description: 'Ihr Account wird nun von einem Administrator geprüft. Sie werden nach der Freischaltung benachrichtigt.',
+      title: 'Bitte E-Mail bestätigen',
+      description: 'Wir haben Ihnen einen Bestätigungslink an ' + email + ' gesendet. Bitte prüfen Sie Ihr Postfach (auch den Spam-Ordner). Nach der Bestätigung wird Ihr Account von einem Administrator freigeschaltet.',
     });
     setMode('login');
   };
