@@ -12,11 +12,28 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { toast } from '@/hooks/use-toast';
-import { Settings, Mail, Shield, Tag, Plus, Edit, Trash2, Save } from 'lucide-react';
+import { Settings, Mail, Shield, Tag, Plus, Edit, Trash2, Save, Sparkles, Loader2 } from 'lucide-react';
 import { useQueryClient } from '@tanstack/react-query';
 
 const AdminEinstellungen = () => {
-  const { isAdminOrAbove } = useAuth();
+  const { isAdminOrAbove, isSuperAdmin } = useAuth();
+  const [demoLoading, setDemoLoading] = useState(false);
+  const [demoResult, setDemoResult] = useState<any>(null);
+
+  const handleBootstrapDemo = async () => {
+    setDemoLoading(true);
+    setDemoResult(null);
+    try {
+      const { data, error } = await supabase.functions.invoke('bootstrap-demo', { method: 'POST' });
+      if (error) throw error;
+      setDemoResult(data);
+      toast({ title: 'Demo-Daten erstellt', description: 'Demo-Accounts und Beispiel-Punzen wurden eingerichtet.' });
+    } catch (err) {
+      toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
+    } finally {
+      setDemoLoading(false);
+    }
+  };
   const { data: settings, isLoading } = useSettings();
   const { data: kategorien } = useKategorien();
   const updateSetting = useUpdateSetting();
