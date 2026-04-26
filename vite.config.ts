@@ -60,7 +60,7 @@ export default defineConfig(({ mode }) => ({
             'date-fns',
             'jspdf',
             'jspdf-autotable',
-            'html2canvas',
+            
             'zod',
           ],
         },
