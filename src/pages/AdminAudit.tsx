@@ -27,13 +27,13 @@ const AdminAudit = () => {
   const { data, isLoading, refetch, isFetching } = useQuery({
     queryKey: ['audit_logs'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('audit_logs')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { data, error } = await (supabase.from('audit_logs') as any)
         .select('*')
         .order('created_at', { ascending: false })
         .limit(200);
       if (error) throw error;
-      return data as AuditRow[];
+      return (data ?? []) as AuditRow[];
     },
     enabled: isAdminOrAbove,
   });

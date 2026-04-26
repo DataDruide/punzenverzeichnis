@@ -22,6 +22,7 @@ const Login = lazy(() => import("./pages/Login"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const AdminUsers = lazy(() => import("./pages/AdminUsers"));
 const AdminEinstellungen = lazy(() => import("./pages/AdminEinstellungen"));
+const AdminAudit = lazy(() => import("./pages/AdminAudit"));
 const Hilfe = lazy(() => import("./pages/Hilfe"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -51,6 +52,7 @@ const App = () => (
                   <Route path="/admin/punzen" element={<AdminPunzen />} />
                   <Route path="/admin/users" element={<AdminUsers />} />
                   <Route path="/admin/einstellungen" element={<AdminEinstellungen />} />
+                  <Route path="/admin/audit" element={<AdminAudit />} />
                   <Route path="/kontakte" element={<Kontakte />} />
                   <Route path="/bilder" element={<Bilder />} />
                   <Route path="/export" element={<Export />} />

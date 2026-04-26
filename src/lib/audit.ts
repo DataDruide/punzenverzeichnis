@@ -16,7 +16,8 @@ export interface AuditEvent {
 export async function logAudit(event: AuditEvent): Promise<void> {
   try {
     const { data: { user } } = await supabase.auth.getUser();
-    await supabase.from('audit_logs').insert({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    await (supabase.from('audit_logs') as any).insert({
       user_id: user?.id ?? null,
       user_email: user?.email ?? null,
       event_type: event.event_type,
