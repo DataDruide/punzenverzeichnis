@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { toast } from '@/hooks/use-toast';
+import { logAudit } from '@/lib/audit';
 import { LogIn, UserPlus, KeyRound } from 'lucide-react';
 
 const Login = () => {
@@ -27,7 +28,14 @@ const Login = () => {
     setLoading(false);
     if (error) {
       toast({ title: 'Anmeldung fehlgeschlagen', description: error.message, variant: 'destructive' });
+      logAudit({
+        event_type: 'auth.login_failed',
+        severity: 'warning',
+        message: `Login fehlgeschlagen für ${cleanMail}`,
+        context: { email: cleanMail, error: error.message },
+      });
     } else {
+      logAudit({ event_type: 'auth.login_success', message: `Login erfolgreich: ${cleanMail}` });
       navigate('/');
     }
   };
