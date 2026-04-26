@@ -178,6 +178,26 @@ const Login = () => {
             </Button>
           </form>
 
+          {mode === 'login' && (
+            <div className="mt-6 border-t pt-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase mb-2 text-center">Demo-Zugänge (Präsentation)</p>
+              <div className="grid grid-cols-1 gap-2">
+                <Button type="button" variant="outline" size="sm" disabled={loading}
+                  onClick={() => demoLogin('demo-admin@zvp-demo.de', 'DemoAdmin2026!')}>
+                  Als Admin anmelden
+                </Button>
+                <Button type="button" variant="outline" size="sm" disabled={loading}
+                  onClick={() => demoLogin('demo-firma@zvp-demo.de', 'DemoFirma2026!')}>
+                  Als Firma anmelden
+                </Button>
+                <Button type="button" variant="outline" size="sm" disabled={loading}
+                  onClick={() => demoLogin('demo-forscher@zvp-demo.de', 'DemoForscher2026!')}>
+                  Als Forscher anmelden
+                </Button>
+              </div>
+            </div>
+          )}
+
           <div className="mt-4 text-center space-y-2">
             {mode === 'login' && (
               <>
