@@ -1,5 +1,5 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, User, Stamp, Search, Image, Download, Shield, Users, Settings, LogOut, HelpCircle } from 'lucide-react';
+import { LayoutDashboard, User, Stamp, Search, Image, Download, Shield, Users, Settings, LogOut, HelpCircle, ScrollText } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 
@@ -15,6 +15,7 @@ const adminItems = [
   { to: '/admin/punzen', label: 'Punzenverwaltung', icon: Stamp },
   { to: '/admin/users', label: 'Benutzerverwaltung', icon: Users },
   { to: '/admin/einstellungen', label: 'Einstellungen', icon: Settings },
+  { to: '/admin/audit', label: 'Audit-Log', icon: ScrollText },
   { to: '/kontakte', label: 'Kontakte', icon: Users },
   { to: '/bilder', label: 'Bildverwaltung', icon: Image },
   { to: '/export', label: 'Datenexport', icon: Download },
