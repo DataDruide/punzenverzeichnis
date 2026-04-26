@@ -18,17 +18,30 @@ const Login = () => {
   const [telefon, setTelefon] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) return;
+  const doLogin = async (mail: string, pw: string) => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    // Sicherheit: vorhandene Session löschen, damit kein Zwischenstand stört
+    await supabase.auth.signOut().catch(() => {});
+    const cleanMail = mail.trim().toLowerCase();
+    const { error } = await supabase.auth.signInWithPassword({ email: cleanMail, password: pw });
     setLoading(false);
     if (error) {
       toast({ title: 'Anmeldung fehlgeschlagen', description: error.message, variant: 'destructive' });
     } else {
       navigate('/');
     }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    await doLogin(email, password);
+  };
+
+  const demoLogin = (mail: string, pw: string) => {
+    setEmail(mail);
+    setPassword(pw);
+    doLogin(mail, pw);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
