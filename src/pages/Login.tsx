@@ -18,17 +18,30 @@ const Login = () => {
   const [telefon, setTelefon] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) return;
+  const doLogin = async (mail: string, pw: string) => {
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    // Sicherheit: vorhandene Session löschen, damit kein Zwischenstand stört
+    await supabase.auth.signOut().catch(() => {});
+    const cleanMail = mail.trim().toLowerCase();
+    const { error } = await supabase.auth.signInWithPassword({ email: cleanMail, password: pw });
     setLoading(false);
     if (error) {
       toast({ title: 'Anmeldung fehlgeschlagen', description: error.message, variant: 'destructive' });
     } else {
       navigate('/');
     }
+  };
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !password) return;
+    await doLogin(email, password);
+  };
+
+  const demoLogin = (mail: string, pw: string) => {
+    setEmail(mail);
+    setPassword(pw);
+    doLogin(mail, pw);
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -164,6 +177,26 @@ const Login = () => {
               )}
             </Button>
           </form>
+
+          {mode === 'login' && (
+            <div className="mt-6 border-t pt-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase mb-2 text-center">Demo-Zugänge (Präsentation)</p>
+              <div className="grid grid-cols-1 gap-2">
+                <Button type="button" variant="outline" size="sm" disabled={loading}
+                  onClick={() => demoLogin('demo-admin@zvp-demo.de', 'DemoAdmin2026!')}>
+                  Als Admin anmelden
+                </Button>
+                <Button type="button" variant="outline" size="sm" disabled={loading}
+                  onClick={() => demoLogin('demo-firma@zvp-demo.de', 'DemoFirma2026!')}>
+                  Als Firma anmelden
+                </Button>
+                <Button type="button" variant="outline" size="sm" disabled={loading}
+                  onClick={() => demoLogin('demo-forscher@zvp-demo.de', 'DemoForscher2026!')}>
+                  Als Forscher anmelden
+                </Button>
+              </div>
+            </div>
+          )}
 
           <div className="mt-4 text-center space-y-2">
             {mode === 'login' && (
