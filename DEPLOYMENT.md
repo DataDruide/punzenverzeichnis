@@ -28,6 +28,8 @@ Pushes auf andere Branches / Pull Requests erzeugen Preview-Deploys.
 
 `public/_redirects` enthält `/* /index.html 200` – damit funktionieren Deep-Links und Page-Refresh in React Router.
 
+> **Wichtig:** Es gibt **keine** `wrangler.toml` im Repo. Cloudflare Pages erkennt das Projekt automatisch als statische Site. Eine `wrangler.toml` würde Cloudflare in den Worker-Modus zwingen und den Deploy abbrechen lassen.
+
 ## Security-Header
 
 `public/_headers` setzt die wichtigsten Security-Header (HSTS, X-Frame-Options, Referrer-Policy etc.).
