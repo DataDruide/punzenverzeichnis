@@ -42,7 +42,15 @@ const MeinePunzen = () => {
   };
 
   const handleSave = async () => {
-    if (!user) return;
+    // Always re-validate session right before write to avoid stale auth.uid() in RLS check
+    const { supabase } = await import('@/integrations/supabase/client');
+    const { data: { session }, error: sessErr } = await supabase.auth.getSession();
+    if (sessErr || !session?.user) {
+      toast({ title: 'Sitzung abgelaufen', description: 'Bitte erneut anmelden.', variant: 'destructive' });
+      return;
+    }
+    const currentUserId = session.user.id;
+
     try {
       let bild_vorlage_path: string | undefined;
       let bild_abdruck_path: string | undefined;
@@ -62,13 +70,17 @@ const MeinePunzen = () => {
         await updateMutation.mutateAsync({ id: editingId, data: punzeData });
         toast({ title: 'Gespeichert', description: 'Punze wurde aktualisiert.' });
       } else {
-        await createMutation.mutateAsync({ ...punzeData, user_id: user.id, einwilligung_akzeptiert_am: new Date().toISOString() });
+        await createMutation.mutateAsync({ ...punzeData, user_id: currentUserId, einwilligung_akzeptiert_am: new Date().toISOString() });
         toast({ title: 'Erstellt', description: 'Neue Punze wurde angelegt.' });
       }
       setDialogOpen(false);
       resetForm();
     } catch (err) {
-      toast({ title: 'Fehler', description: (err as Error).message, variant: 'destructive' });
+      const msg = (err as Error).message || '';
+      const friendly = msg.includes('row-level security')
+        ? 'Berechtigung fehlt. Bitte ab- und neu anmelden – die Sitzung ist möglicherweise abgelaufen.'
+        : msg;
+      toast({ title: 'Fehler', description: friendly, variant: 'destructive' });
     }
   };
 
