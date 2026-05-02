@@ -49,11 +49,13 @@ const Kontakte = () => {
       return;
     }
     try {
+      // Empty mitgliedsnummer must be NULL (UNIQUE constraint blocks duplicate empty strings)
+      const payload = { ...form, mitgliedsnummer: form.mitgliedsnummer?.trim() ? form.mitgliedsnummer.trim() : null };
       if (editingId) {
-        await updateMutation.mutateAsync({ id: editingId, data: form as ContactUpdate });
+        await updateMutation.mutateAsync({ id: editingId, data: payload as ContactUpdate });
         toast({ title: 'Gespeichert', description: 'Kontakt wurde aktualisiert.' });
       } else {
-        await createMutation.mutateAsync(form as ContactInsert);
+        await createMutation.mutateAsync(payload as ContactInsert);
         toast({ title: 'Erstellt', description: 'Neuer Kontakt wurde hinzugefügt.' });
       }
       setDialogOpen(false);
